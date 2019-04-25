@@ -69,30 +69,32 @@ while(playing is True):
     command = input('\nEnter a command: ')
     command = command.split(' ')
     if len(command) == 1:
-        if command[0] == 'q':
+        if command[0] == 'quit':
             print('Thanks for playing!')
             playing is False
             break
-        elif command[0] == 'w':
+        elif command[0] == 'west':
             if player.current_room.w_to is not None:
                 player.change_room(player.current_room.w_to)
             else:
                 print('There is no path that way.')
-        elif command[0] == 's':
+        elif command[0] == 'south':
             if player.current_room.s_to is not None:
                 player.change_room(player.current_room.s_to)
             else:
                 print('There is no path that way.')
-        elif command[0] == 'n':
+        elif command[0] == 'north':
             if player.current_room.n_to is not None:
                 player.change_room(player.current_room.n_to)
             else:
                 print('There is no path that way.')
-        elif command[0] == 'e':
+        elif command[0] == 'east':
             if player.current_room.e_to is not None:
                 player.change_room(player.current_room.e_to)
             else:
                 print('There is no path that way.')
+        elif command[0] == 'help':
+            print('Here are some commands you can try: \nnorth, south, east, west \nsearch room \ninspect (item) \ntake (item) \ndrop (item) \nview inventory \n')
     if len(command) == 2:
         if command == ['search', 'room']:
             player.current_room.view_items()
@@ -103,9 +105,13 @@ while(playing is True):
         elif command[0] == 'take' and player.current_room.item_check(command[1]):
             player.take_item(player.current_room.item_check(command[1]))
             print('You took the ' + command[1])
+        elif command[0] == 'take' and not player.current_room.item_check(command[1]):
+            print('You took what?')
         elif command[0] == 'drop' and player.item_check(command[1]):
             player.drop_item(player.item_check(command[1]))
             print('You dropped the ' + command[1])
+        elif command[0] == 'drop' and not player.item_check(command[1]):
+            print("You don't have that to drop.")
         elif command[0] == 'view' and command[1] == 'inventory':
             if len(player.items) != 0:
                 player.view_inventory()
