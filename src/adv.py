@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from item import Item
 
 # Declare all the rooms
 
@@ -21,6 +22,11 @@ chamber! Sadly, it has already been completely emptied by
 earlier adventurers. The only exit is to the south."""),
 }
 
+item = {
+    'axe': Item('axe', '''A rusted axe. Someone must have forgotten it.''', 'an old axe'),
+    'note': Item('note', '''It says "thank you" on it''', 'a crumpled note'),
+    'hat': Item('hat', '''A gross hat. There's fungus growing in it.''', 'a discarded hat')
+}
 
 # Link rooms together
 
@@ -32,6 +38,10 @@ room['overlook'].s_to = room['foyer']
 room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
+
+room['narrow'].add_item(item['axe'])
+room['treasure'].add_item(item['note'])
+room['outside'].add_item(item['hat'])
 
 #
 # Main
@@ -57,27 +67,49 @@ print('\nLocation: ' + player.current_room.name)
 print(player.current_room.description)
 while(playing is True):
     command = input('\nEnter a command: ')
-    if command == 'q':
-        print('Thanks for playing!')
-        playing is False
-        break
-    elif command == 'w':
-        if player.current_room.w_to is not None:
-            player.change_room(player.current_room.w_to)
-        else:
-            print('There is no path that way.')
-    elif command == 's':
-        if player.current_room.s_to is not None:
-            player.change_room(player.current_room.s_to)
-        else:
-            print('There is no path that way.')
-    elif command == 'n':
-        if player.current_room.n_to is not None:
-            player.change_room(player.current_room.n_to)
-        else:
-            print('There is no path that way.')
-    elif command == 'e':
-        if player.current_room.e_to is not None:
-            player.change_room(player.current_room.e_to)
-        else:
-            print('There is no path that way.')
+    command = command.split(' ')
+    if len(command) == 1:
+        if command[0] == 'q':
+            print('Thanks for playing!')
+            playing is False
+            break
+        elif command[0] == 'w':
+            if player.current_room.w_to is not None:
+                player.change_room(player.current_room.w_to)
+            else:
+                print('There is no path that way.')
+        elif command[0] == 's':
+            if player.current_room.s_to is not None:
+                player.change_room(player.current_room.s_to)
+            else:
+                print('There is no path that way.')
+        elif command[0] == 'n':
+            if player.current_room.n_to is not None:
+                player.change_room(player.current_room.n_to)
+            else:
+                print('There is no path that way.')
+        elif command[0] == 'e':
+            if player.current_room.e_to is not None:
+                player.change_room(player.current_room.e_to)
+            else:
+                print('There is no path that way.')
+    if len(command) == 2:
+        if command == ['search', 'room']:
+            player.current_room.view_items()
+        elif command[0] == 'inspect' and player.current_room.item_check(command[1]):
+            player.current_room.item_check(command[1]).inspect()
+        elif command[0] == 'inspect' and not player.current_room.item_check(command[1]):
+            print("That's not here. You inspect yourself instead.")
+        elif command[0] == 'take' and player.current_room.item_check(command[1]):
+            player.take_item(player.current_room.item_check(command[1]))
+            print('You took the ' + command[1])
+        elif command[0] == 'drop' and player.item_check(command[1]):
+            player.drop_item(player.item_check(command[1]))
+            print('You dropped the ' + command[1])
+        elif command[0] == 'view' and command[1] == 'inventory':
+            if len(player.items) != 0:
+                player.view_inventory()
+            else:
+                print('Your inventory is empty.')
+
+    

@@ -13,7 +13,12 @@ class Room():
     self.items.append(item)
   def view_items(self):
     for i in self.items:
-      print('You see ' + {i})
+      print('You see ' + i.display_name)
   def remove_item(self, item):
     self.items.remove(item)
+  def item_check(self, item):
+    for i in self.items:
+      if i.name == item:
+        return i
+      
 
