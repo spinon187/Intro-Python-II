@@ -1,10 +1,10 @@
 from room import Room
+from player import Player
 
 # Declare all the rooms
 
 room = {
-    'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+    'outside':  Room("Outside Cave Entrance", "North of you, the cave mount beckons"),
 
     'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
 passages run north and east."""),
@@ -41,7 +41,7 @@ playing = True
 
 # Make a new player object that is currently in the 'outside' room.
 
-player = Player('outside')
+player = Player(room['outside'])
 
 # Write a loop that:
 #
@@ -53,9 +53,31 @@ player = Player('outside')
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
-while(playing = True):
-    command = input('Enter a command: ')
-    if command is 'q':
+print('\nLocation: ' + player.current_room.name)
+print(player.current_room.description)
+while(playing is True):
+    command = input('\nEnter a command: ')
+    if command == 'q':
         print('Thanks for playing!')
+        playing is False
         break
-    
+    elif command == 'w':
+        if player.current_room.w_to is not None:
+            player.change_room(player.current_room.w_to)
+        else:
+            print('There is no path that way.')
+    elif command == 's':
+        if player.current_room.s_to is not None:
+            player.change_room(player.current_room.s_to)
+        else:
+            print('There is no path that way.')
+    elif command == 'n':
+        if player.current_room.n_to is not None:
+            player.change_room(player.current_room.n_to)
+        else:
+            print('There is no path that way.')
+    elif command == 'e':
+        if player.current_room.e_to is not None:
+            player.change_room(player.current_room.e_to)
+        else:
+            print('There is no path that way.')
